@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+#include <memory>
 #include "raylib.h"
 #include "../combat/WeaponDefs.h"
 #include "Enemy.h" 
@@ -8,8 +10,9 @@ enum class PlayerState { IDLE, RUN, JUMP, ATTACK };
 class Player {
 public:
     Player(); // 构造函数
-    void Update(float dt, Enemy& enemy);
+    void Update(float dt, std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<Rectangle>& mapObstacles);
     void Draw();
+    Vector2 GetPosition() const { return { body.x + body.width / 2, body.y + body.height / 2 };}; 
 
 private:
     Rectangle body;
@@ -28,6 +31,6 @@ private:
     // 内部逻辑函数 (类似 static helper functions)
     void HandleMovement(float dt);
     void TransitionToAttack(int comboIdx);
-    void ProcessAttackState(Enemy& enemy);
+    void ProcessAttackState(std::vector<std::unique_ptr<Enemy>>& enemies);
     Rectangle GetCurrentHitbox(const AttackMove& move);
 };

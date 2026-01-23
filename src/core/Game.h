@@ -1,7 +1,9 @@
 #pragma once
 #include "../entities/Player.h"
 #include "../entities/Entity.h"
+#include <vector>
 #include <memory>
+#include "raylib.h"
 
 class Game {
 public:
@@ -13,9 +15,13 @@ public:
 private:
     void Update();
     void Draw();
-    void LoadResources();
+    void LoadLevel();
 
     std::unique_ptr<Player> player;
-    std::unique_ptr<Enemy> enemy;
+    std::vector<std::unique_ptr<Enemy>> enemies;
+
+    std::vector<Rectangle> mapObstacles;
+
+    Camera2D camera;
 };
 

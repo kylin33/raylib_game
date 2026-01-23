@@ -30,7 +30,7 @@ Player::Player() {
     currentWeapon.combos.push_back(slash2);
 }
 
-void Player::Update(float dt, Enemy& enemy) {
+void Player::Update(float dt, std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<Rectangle>& mapObstacles) {
     const float GRAVITY = 800.0f;
     velocity.y += GRAVITY * dt;
 
@@ -50,7 +50,7 @@ void Player::Update(float dt, Enemy& enemy) {
             }
             break;
         case PlayerState::ATTACK:
-            ProcessAttackState(enemy);
+            ProcessAttackState(enemies);
             break;
     }
     
@@ -138,7 +138,7 @@ void Player::TransitionToAttack(int comboIdx){
     velocity.x = 0; // 攻击时定身 (Root Motion)
 }
 
-void Player::ProcessAttackState(Enemy& enemy) {
+void Player::ProcessAttackState(std::vector<std::unique_ptr<Enemy>>& enemies) {
     stateTimer++; // 帧步进    
     const AttackMove& move = currentWeapon.combos[comboIndex];
     
@@ -150,10 +150,12 @@ void Player::ProcessAttackState(Enemy& enemy) {
         // 只有这几帧才进行碰撞检测
         if (!attackConnected) { // 简单逻辑：每一段攻击只能命中一次
             Rectangle hitRect = GetCurrentHitbox(move);
-            if (CheckCollisionRecs(hitRect, enemy.body)) {
-                enemy.TakeDamage(move.damage);
-                attackConnected = true; 
-                // 这里可以加 HitStop (顿帧) 逻辑
+            for (auto& enemy : enemies) {
+                if (CheckCollisionRecs(hitRect, enemy.body)) {
+                    enemy.TakeDamage(move.damage);
+                    attackConnected = true; 
+                    // 这里可以加 HitStop (顿帧) 逻辑
+                }
             }
         }
     }
