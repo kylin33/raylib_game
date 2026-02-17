@@ -151,8 +151,8 @@ void Player::ProcessAttackState(std::vector<std::unique_ptr<Enemy>>& enemies) {
         if (!attackConnected) { // 简单逻辑：每一段攻击只能命中一次
             Rectangle hitRect = GetCurrentHitbox(move);
             for (auto& enemy : enemies) {
-                if (CheckCollisionRecs(hitRect, enemy.body)) {
-                    enemy.TakeDamage(move.damage);
+                if (CheckCollisionRecs(hitRect, enemy->body)) {
+                    enemy->TakeDamage(move.damage);
                     attackConnected = true; 
                     // 这里可以加 HitStop (顿帧) 逻辑
                 }
