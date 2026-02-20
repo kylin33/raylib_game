@@ -2,6 +2,8 @@
 
 Player::Player() {
     body = { 200, 400, 32, 64 }; // 玩家碰撞箱
+    maxHp = 100.0f;
+    hp = maxHp;
     velocity = { 0, 0 };
     facingRight = true;
 
@@ -103,6 +105,12 @@ void Player::Draw() {
             DrawCircle(body.x + 16, body.y - 10, 5, BLUE);
         }
     }
+}
+
+void Player::SetHP(float damage){
+    hp -= damage; 
+    if (hp < 0) hp = 0;
+    if (hp > maxHp) hp = maxHp;
 }
 
 void Player::HandleMovement(float dt) {

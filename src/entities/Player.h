@@ -13,11 +13,16 @@ public:
     void Update(float dt, std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<Rectangle>& mapObstacles);
     void Draw();
     Vector2 GetPosition() const { return { body.x + body.width / 2, body.y + body.height / 2 };}; 
+    float GetHP() const { return hp; };
+    float GetMaxHP() const { return maxHp; };
+    void SetHP(float damage);
 
 private:
     Rectangle body;
     Vector2 velocity;
     bool facingRight;
+    float hp;
+    float maxHp;
 
     // 状态机
     PlayerState currentState;

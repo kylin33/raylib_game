@@ -16,6 +16,7 @@ private:
     void Update();
     void Draw();
     void LoadLevel();
+    void DrawMinimap();
 
     std::unique_ptr<Player> player;
     std::vector<std::unique_ptr<Enemy>> enemies;
