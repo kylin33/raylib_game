@@ -1,31 +1,66 @@
 #include "Game.h"
-#include "raylib.h"
+#include <fstream>
 #include <iostream>
 #include <algorithm>
+
+#include "json.hpp"
+
+using json = nlohmann::json;
 
 Game::Game(int width, int height, const char* title) {
     InitWindow(width, height, title);
     SetTargetFPS(60);
 
-    // init camera
     camera = { 0 };
     camera.target = {0, 0};
     camera.offset = { (float)width / 2.0f, (float)height / 2.0};
     camera.rotation = 0.0f;
     camera.zoom = 1.0f;
 
-    // 实例化对象
     player = std::make_unique<Player>();
-    LoadLevel();
+    LoadLevel("/root/myproject/raylib_game/assets/level1.json"); 
 }
 
-void Game::LoadLevel(){
-    // Load map obstacles, enemies, etc.
-    enemies.push_back(std::make_unique<Enemy>(600, 400));
-    enemies.push_back(std::make_unique<Enemy>(800, 400));
-    enemies.push_back(std::make_unique<Enemy>(1200, 400));
+void Game::LoadLevel(const std::string& filename){
+    enemies.clear();
+    mapObstacles.clear();
 
-    mapObstacles.push_back({0, 464, 1200, 136});
+    std::ifstream file(filename);
+    if(!file.is_open()){
+        std::cerr << "Failed to open level file: " << filename << std::endl;
+        return;
+    }
+    json levelData;
+    try{
+        file >> levelData;
+    }catch(json::parse_error& e){
+        std::cerr << "Json parse error: " << e.what() << std::endl;
+        return;
+    }
+    
+    if(levelData.contains("playerStart")){
+        float px = levelData["playerStart"]["x"];
+        float py = levelData["playerStart"]["y"];
+        player->SetPosition(px, py); 
+    }
+    if (levelData.contains("platforms")) {
+        for (const auto& item : levelData["platforms"]) {
+            float x = item["x"];
+            float y = item["y"];
+            float w = item["w"];
+            float h = item["h"];
+            mapObstacles.push_back({x, y, w, h});
+        }
+    }
+    if (levelData.contains("enemies")) {
+        for (const auto& item : levelData["enemies"]) {
+            float x = item["x"];
+            float y = item["y"];
+            
+            enemies.push_back(std::make_unique<Enemy>(x, y));
+        }
+    }
+    std::cout << "Level Loaded: " << levelData.value("mapName", "Unknown") << std::endl;
 }
 
 Game::~Game(){

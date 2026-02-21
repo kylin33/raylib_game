@@ -7,7 +7,7 @@
 
 enum class PlayerState { IDLE, RUN, JUMP, ATTACK };
 
-class Player {
+class Player: public Entity {
 public:
     Player(); // 构造函数
     void Update(float dt, std::vector<std::unique_ptr<Enemy>>& enemies, std::vector<Rectangle>& mapObstacles);
@@ -16,6 +16,7 @@ public:
     float GetHP() const { return hp; };
     float GetMaxHP() const { return maxHp; };
     void SetHP(float damage);
+    void SetPosition(float x, float y);
 
 private:
     Rectangle body;

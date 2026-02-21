@@ -15,7 +15,7 @@ public:
 private:
     void Update();
     void Draw();
-    void LoadLevel();
+    void LoadLevel(const std::string& filename);
     void DrawMinimap();
 
     std::unique_ptr<Player> player;

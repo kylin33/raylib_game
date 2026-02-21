@@ -192,3 +192,9 @@ Rectangle Player::GetCurrentHitbox(const AttackMove& move){
     float hitX = facingRight ? (body.x + move.hitbox.x) : (body.x + body.width - move.hitbox.x - move.hitbox.width);
     return { hitX, body.y + move.hitbox.y, move.hitbox.width, move.hitbox.height };
 }
+
+void Player::SetPosition(float x, float y){
+    body.x = x;
+    body.y = y;
+    
+}

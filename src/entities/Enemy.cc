@@ -39,7 +39,6 @@ void Enemy::Update(Vector2 playerPos){
     float distToPlayer = Vector2Distance(enemyCenter, playerPos);
     switch (currentState) {
         case EnemyState::IDLE:
-            // 逻辑：如果玩家进入侦测范围，切换到追逐
             if (distToPlayer < detectionRange) {
                 currentState = EnemyState::CHASE;
             }
@@ -47,7 +46,7 @@ void Enemy::Update(Vector2 playerPos){
 
         case EnemyState::CHASE:
             // 逻辑：如果玩家太远，放弃追逐
-            if (distToPlayer > detectionRange * 1.5f) { // 给一点缓冲空间防止抖动
+            if (distToPlayer > detectionRange * 1.5f) { 
                 currentState = EnemyState::IDLE;
             }
             // 逻辑：如果进入攻击范围，切换到攻击
@@ -65,7 +64,6 @@ void Enemy::Update(Vector2 playerPos){
             break;
 
         case EnemyState::ATTACK:
-            // 逻辑：如果玩家跑远了，继续追
             if (distToPlayer > attackRange) {
                 currentState = EnemyState::CHASE;
             }
